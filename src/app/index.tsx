@@ -1,98 +1,117 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Alert, Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+type Product = {
+  id: string;
+  name: string;
+  price: string;
+};
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+const products: Product[] = [
+  { id: '1', name: 'Wireless Headphones', price: '$49.99' },
+  { id: '2', name: 'Smart Watch', price: '$79.99' },
+  { id: '3', name: 'Portable Speaker', price: '$29.99' },
+];
+
+export default function Index() {
+  const handleViewProduct = (product: Product) => {
+    Alert.alert(product.name, `Price: ${product.price}`);
+  };
+
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.container}
+    >
+      <View style={styles.header}>
+        <Text style={styles.name}>Muhammad Sammad Israr</Text>
+        <Text style={styles.roll}>Roll No: 23i-3042</Text>
+      </View>
 
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+      <Text style={styles.title}>Expo Product Explorer</Text>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+      <Text style={styles.sectionTitle}>Products</Text>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
+      {products.map((product) => (
+        <View key={product.id} style={styles.productCard}>
+          <View>
+            <Text style={styles.productName}>{product.name}</Text>
+            <Text style={styles.price}>{product.price}</Text>
+          </View>
+
+          <Button
+            title="View"
+            onPress={() => handleViewProduct(product)}
           />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+        </View>
+      ))}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    padding: 20,
+    paddingTop: 60,
   },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+
+  header: {
+    backgroundColor: '#e0f2fe',
+    borderRadius: 8,
+    marginBottom: 24,
+    padding: 16,
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+
+  name: {
+    color: '#111827',
+    fontSize: 22,
+    fontWeight: 'bold',
   },
+
+  roll: {
+    color: '#374151',
+    fontSize: 18,
+    marginTop: 4,
+  },
+
   title: {
-    textAlign: 'center',
+    color: '#111827',
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
-  code: {
-    textTransform: 'uppercase',
+
+  sectionTitle: {
+    color: '#111827',
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 12,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+
+  productCard: {
+    alignItems: 'center',
+    borderColor: '#d1d5db',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+    padding: 16,
+  },
+
+  productName: {
+    color: '#111827',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+
+  price: {
+    color: '#4b5563',
+    fontSize: 16,
+    marginTop: 4,
   },
 });
